@@ -5,6 +5,7 @@ jade = require 'gulp-jade'
 coffee = require 'gulp-coffee'
 less = require 'gulp-less'
 sourcemaps = require 'gulp-sourcemaps'
+config = require './config'
 
 exts = (ext) -> ['./public/**/*.' + ext, '!./public/libs/**/*']
   
@@ -17,14 +18,14 @@ gulp.task 'jade', ()->
   gulp.src paths.jade
     .pipe jade 
       pretty: true
-    .pipe gulp.dest './generated'
+    .pipe gulp.dest config.generated
     
 gulp.task 'coffee', ()->
   gulp.src paths.coffee
     #.pipe sourcemaps.init()
     .pipe coffee()
     #.pipe sourcemaps.write()
-    .pipe gulp.dest './generated' 
+    .pipe gulp.dest config.generated  
   
   
 gulp.task 'less', ()->
@@ -32,16 +33,19 @@ gulp.task 'less', ()->
     .pipe sourcemaps.init()
     .pipe less()
     .pipe sourcemaps.write()
-    .pipe gulp.dest './generated' 
+    .pipe gulp.dest config.generated 
     
 gulp.task 'watch', () ->
   gulp.watch paths.jade, ['jade']
   gulp.watch paths.coffee, ['coffee']
   gulp.watch paths.less, ['less']
   
+gulp.task 'generate', ['jade', 'coffee', 'less'], ->
 
-gulp.task 'serve', ['watch', 'jade', 'coffee', 'less'], ()->
+gulp.task 'serve', ['watch', 'generate'], ()->
   server = gls 'app.js', {}, false
   server.start()
+  
+gulp.task 'default', ['generate']
   
     

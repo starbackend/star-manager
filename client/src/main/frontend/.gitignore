@@ -1,2 +1,4 @@
-generated/
-public/libs/
+/generated/
+/node_modules/
+/public/libs/
+/npm-debug.log
