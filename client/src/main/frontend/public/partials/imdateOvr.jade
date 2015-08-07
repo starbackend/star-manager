@@ -1,0 +1,75 @@
+div(
+  ng-controller="ImdateOvrCtrl"
+).margin02
+
+  .panel.panel-default
+    .panel-heading
+      .panel-title Environment
+    .panel-body
+      select.form-control(
+        ng-model="tab.data.environment", 
+        ng-options="env for env in environments"
+      )
+      
+      
+  .panel.panel-default
+    .panel-heading
+      .panel-title OVR
+    .panel-body(cg-busy="ovr.$promise")
+      
+      button.btn(ng-click="refreshOvr()")
+        span.glyphicon.glyphicon-refresh
+        
+      table.table.table-striped(st-safe-src="ovr", st-table="dispalyedOvr")
+        thead
+          tr
+            th imdateId
+            th imo
+            th mmsi
+            th shipName
+            th callsign
+            th irNumber
+            th flagState
+            th source
+            th reliability
+          tr
+            th
+              input.form-control(placeholder="emsa", type="number", ng-model="searchOvr.model.imdateId")
+            th
+              input.form-control(placeholder="imo", type="number", ng-model="searchOvr.model.imo")
+            th
+              input.form-control(placeholder="mmsi", type="number", ng-model="searchOvr.model.mmsi")
+            th
+              input.form-control(placeholder="name", type="text", ng-model="searchOvr.model.shipName", empty-to-null)
+            th
+              input.form-control(placeholder="callsign", type="text", ng-model="searchOvr.model.callSign", empty-to-null)
+            th
+              input.form-control(placeholder="ir", type="text", ng-model="searchOvr.model.irNumber", empty-to-null)
+            th
+              input.form-control(placeholder="flagstate", type="text", ng-model="searchOvr.model.flagState", empty-to-null)
+            th
+            th
+        tbody
+          tr(ng-repeat="row in ovr")
+            td(ng-class="{ 'search-highlighted' : row.imdateId === searchOvr.submitted.imdateId }") {{row.imdateId}}
+            td(ng-class="{ 'search-highlighted' : row.imo === searchOvr.submitted.imo }") {{row.imo}}
+            td(ng-class="{ 'search-highlighted' : row.mmsi === searchOvr.submitted.mmsi }") {{row.mmsi}}
+            td(ng-class="{ 'search-highlighted' : row.shipName === searchOvr.submitted.shipName }") {{row.shipName}}
+            td(ng-class="{ 'search-highlighted' : row.callSign === searchOvr.submitted.callSign }") {{row.callSign}}
+            td(ng-class="{ 'search-highlighted' : row.irNumber === searchOvr.submitted.irNumber }") {{row.irNumber}}
+            td(ng-class="{ 'search-highlighted' : row.flagState === searchOvr.submitted.flagState }") {{row.flagState}}
+            td {{row.identitySource.sourceName}}
+            td {{row.identitySource.reliability}}
+        
+  .panel.panel-default
+    .panel-heading
+      .panel-title Update
+    .panel-body(cg-busy="xml.$promise")
+      button.btn.btn-info(ng-click="refreshXml()")
+        span.glyphicon.glyphicon-download
+      button.btn.btn-danger(ng-click="sendXml()")
+        span.glyphicon.glyphicon-upload
+      div(
+        ui-ace="{mode:'xml'}"
+        ng-model="xml.data"
+      ) 

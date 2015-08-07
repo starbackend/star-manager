@@ -1,0 +1,11 @@
+| Theme 
+select(
+  ng-change="themeChange()"
+  ng-model="theme"
+)
+
+  option(
+    ng-repeat="it in themes"
+    value="{{it}}"
+  )
+    | {{it}}

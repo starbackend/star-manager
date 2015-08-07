@@ -1,0 +1,51 @@
+doctype
+html
+  head
+    link(rel="stylesheet" href="main.css")
+    script(
+      data-main="js/app"
+      src="libs/requirejs/require.js"
+    )
+  body.rows(ng-controller="MainCtrl")
+    .cols.margin02
+      .cols.grow.scroll
+        button.btn(
+          ng-repeat="tab in tabs track by tab.id"
+          ng-click="showTab(tab)"
+          ng-class="{'bg-primary': tab.visible}"
+        ) 
+          compile(compile="tab.title")
+          span(ng-click="closeTab(tab); $event.stopPropagation()").glyphicon.glyphicon-remove
+      .btn-group
+        button.btn.btn-info.dropdown-toggle(
+          data-toggle="dropdown"
+        )
+          span.glyphicon.glyphicon-plus
+          span.caret
+        ul.dropdown-menu.dropdown-menu-right
+          li.dropdown-submenu 
+            a(href="#") IMDatE Projects
+            ul.dropdown-menu
+              li(ng-repeat="env in environments") 
+                a(ng-click="addImdateProjects(env)") {{env}}
+          li.dropdown-submenu 
+            a(href="#") IMDatE OVR
+            ul.dropdown-menu
+              li(ng-repeat="env in environments") 
+                a(ng-click="addImdateOvr(env)") {{env}}
+          li.divider
+          li: a(href="#") Settings 
+    .grow(
+      ng-repeat="tab in tabs track by tab.id"
+      ng-show="tab.visible"
+    ) 
+      div(
+        ng-include="tab.templateUrl"
+        onload="data = tab.data"
+      )
+      
+        
+      
+    
+
+  

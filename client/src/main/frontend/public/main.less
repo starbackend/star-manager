@@ -1,0 +1,58 @@
+@import (css) "libs/angular-notify/dist/angular-notify.css";
+@import (css) "libs/bootstrap/dist/css/bootstrap.css";
+@import (css) "libs/bootstrap-submenu/dist/css/bootstrap-submenu.css";
+@import (css) "libs/angular-busy/dist/angular-busy.css";
+//@import (css) "libs/smartmenus/dist/css/sm-core-css.css"
+//@import (css) "libs/smartmenus/dist/css/sm-blue/sm-blue.css"
+
+.max {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+html, body {
+  &:extend(.max);
+}
+
+.fill {
+  align-items: stretch;
+  display:flex;
+}
+
+.rows {
+  &:extend(.fill);
+  flex-direction: column;
+}
+
+.cols {
+  &:extend(.fill);
+  flex-direction: row;
+}
+
+.grow {
+  flex-grow: 1;
+}
+
+.margin02 {
+  margin: 0.2em;
+}
+
+.scroll {
+  overflow: auto;
+}
+
+.st-sort-ascent:before{
+  content: '\25B2';
+}
+
+.st-sort-descent:before{
+  content: '\25BC';
+}
+
+.search-highlighted {
+	font-weight: bold;
+	font-style: italic;
+}	
+
+.ace_editor { height: 20em; }

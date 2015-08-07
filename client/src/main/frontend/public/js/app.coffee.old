@@ -1,0 +1,79 @@
+require ["config"], ->
+    
+  requirejs [
+    "jquery.contextMenu",
+    "jquery.ui.position",
+    "angular",
+    "wcDocker"
+  ], ->
+    
+    angular.module 'star.manager', []
+      .factory 'wcDockerService', 
+        ()->
+          themes: [
+            'default'
+            'bigRed'
+            'ideDark'
+            'shadow'
+          ]
+        
+      .directive 'smSettings',
+        [
+          () ->
+            templateUrl: 'partials/settings.html'
+            controller: [
+              '$scope'
+              'wcDockerService'
+              ($scope, wcDockerService) ->
+                $scope.theme = wcDockerService.docker.theme()
+                $scope.themes = wcDockerService.themes 
+                
+                $scope.themeChange = () ->
+                  wcDockerService.docker.theme $scope.theme
+                  
+
+            ]
+        ]
+      .controller 'MainCtrl', 
+        [
+          '$scope'
+          '$compile'
+          'wcDockerService'
+          class MainCtrl
+            constructor: ($scope, $compile, wcDockerService) ->
+              myDocker = new wcDocker document.body, { themePath: 'libs/wcDocker/Build/Themes' }
+              
+              wcDockerService.docker = myDocker
+              
+              myDocker.theme wcDockerService.themes[0]
+              
+              myDocker.registerPanelType 'IMDatE Projects',
+                onCreate: (myPanel, options) ->
+                options: {}
+                
+                  
+              myDocker.registerPanelType 'Settings',
+                onCreate: (myPanel, options) ->
+                  elem = $compile('<sm-settings></sm-settings>')($scope)
+                  myPanel.layout().addItem elem
+                  
+                options: {}
+        ]
+              
+    angular.element(document).ready ->
+      angular.bootstrap document, ['star.manager']
+        
+      
+      #panel1 = myDocker.addPanel 'Panel1', wcDocker.DOCK.LEFT
+      #
+      #myDocker.addPanel 'Panel2', wcDocker.DOCK.BOTTOM, panel1
+      #
+      #myDocker.addPanel 'Panel3', wcDocker.DOCK.RIGHT, null, {w:200,h:200}
+      
+      
+      
+      
+        
+        
+
+

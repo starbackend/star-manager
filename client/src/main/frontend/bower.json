@@ -1,0 +1,31 @@
+{
+  "name": "star-manager",
+  "version": "0.0.0",
+  "authors": [
+    "maprohu <maprohu@gmail.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "angular": "~1.4.3",
+    "requirejs": "~2.1.20",
+    "angular-schema-form": "~0.8.4",
+    "angular-bootstrap": "~0.13.2",
+    "angular-smart-table": "~2.1.1",
+    "bootstrap-submenu": "~1.2.13",
+    "angular-resource": "~1.4.3",
+    "angular-busy": "~4.1.3",
+    "angular-notify": "~2.5.0",
+    "ngcompile": "~0.0.1",
+    "angular-ui-ace": "bower",
+    "bootstrap": "~3.3.5"
+  },
+  "overrides": {
+    "angular": {
+      "main": "angular.js"
+    }
+  },
+  "resolutions": {
+    "angular": "~1.4.3"
+  }
+}

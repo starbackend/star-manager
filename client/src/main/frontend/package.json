@@ -1,0 +1,24 @@
+{
+  "name": "star-manager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "requirejs": "bower-requirejs -c public/js/config.js  -e requirejs"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.13.3",
+    "express-http-proxy": "^0.6.0",
+    "gulp": "^3.9.0",
+    "gulp-jade": "^1.1.0",
+    "gulp-less": "^3.0.3",
+    "gulp-live-server": "0.0.23",
+    "gulp-sourcemaps": "^1.5.2",
+    "gulp-watch": "^4.3.4",
+    "harp": "^0.17.0",
+    "http-proxy": "^1.11.1"
+  }
+}

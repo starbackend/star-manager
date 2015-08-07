@@ -1,0 +1,65 @@
+div(
+  ng-controller="ImdateProjectsCtrl"
+).margin02
+
+  .panel.panel-default
+    .panel-heading
+      .panel-title Environment
+    .panel-body
+      select.form-control(
+        ng-model="tab.data.environment", 
+        ng-options="env for env in environments"
+      )
+      
+  .panel.panel-default
+    .panel-heading
+      .panel-title Create Project
+    .panel-body
+      form(
+        sf-schema='createProject.schema'
+        sf-form='createProject.form'
+        sf-model='createProject.model'
+        name="createProjectForm"
+        ng-submit="createProject.submit(createProjectForm)"
+      )
+
+  .panel.panel-default
+    .panel-heading
+      .panel-title Projects
+    .panel-body(
+      cg-busy="projects.$promise"
+    )
+      
+      table(
+        st-table="displayedProjects"
+        st-safe-src="projects"
+      ).table.table-striped.table-hover
+        thead
+          tr
+            th(colspan="4")
+              .cols
+                button.btn(ng-click="refreshProjects()")
+                  span.glyphicon.glyphicon-refresh
+                input(
+                  st-search=""
+                  type="text"
+                  placeholder="search..."
+                ).form-control.grow
+          tr
+            th(st-sort="projectId") ID
+            th(st-sort="name") Project Name
+            th(st-sort="description") Description
+            th(st-sort="creationDate") Creation Date
+        tbody
+          tr(
+            ng-repeat="row in displayedProjects"
+          )
+            td {{ row.projectId }}
+            td {{ row.name }}
+            td {{ row.description }}
+            td {{ row.creationDate | date }}
+        
+    
+    
+    
+    
