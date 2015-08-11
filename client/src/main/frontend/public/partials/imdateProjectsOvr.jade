@@ -1,0 +1,47 @@
+div(
+  ng-controller="ImdateProjectsOvrCtrl"
+).margin02
+
+  .panel.panel-default
+    .panel-heading
+      .panel-title Environment
+    .panel-body
+      select.form-control(
+        ng-model="tab.data.environment", 
+        ng-options="env for env in environments"
+      )
+      
+  .panel.panel-default
+    .panel-heading
+      .panel-title Project
+    .panel-body(
+      cg-busy="projects.$promise"
+    )
+      
+      select.form-control(
+        ng-model="project", 
+        ng-options="project.name for project in projects | orderBy:'name'"
+      )
+      .form-horizontal(
+        cg-busy="projectsOvr.$promise"
+      )
+        .form-group
+          label.col-sm-2.control-label Record Count
+          .col-sm-10
+            .form-control-static {{projectsOvr.count}}
+        .form-group
+          label.col-sm-2.control-label Last Update
+          .col-sm-10
+            .form-control-static {{projectsOvr.lastUpdate | date}}
+        button.btn.btn-danger(
+          ng-disabled="!project"
+          ng-click="deleteProjectsOvr()"
+        )
+          span.glyphicon.glyphicon-trash
+          
+        
+        
+      
+    
+      
+      

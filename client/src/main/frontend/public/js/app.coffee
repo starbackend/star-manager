@@ -46,42 +46,48 @@ require ["config"], ->
               classes: 'alert-success'
               duration: 3000
         
-      .controller "MainCtrl", class MainCtrl
-        constructor: ($scope, $resource) ->
-          $scope.tabs = []
-          $scope.environments = $resource('/api/environments').query()
+      .controller "MainCtrl", ($scope, $resource) ->
+        $scope.tabs = []
+        $scope.environments = $resource('/api/environments').query()
+        
+        tabId = 0
+        
+        visibleTab = null
+        
+        addTab = (tab) ->
+          tab.id = tabId++
+          $scope.tabs.push tab
+          $scope.showTab(tab)
           
-          tabId = 0
+        $scope.addImdateProjects = (env) ->
+          addTab 
+            title: 'IMDatE Projects - {{tab.data.environment}}'
+            templateUrl: 'partials/imdateProjects.html'
+            data:
+              environment: env
+        
+        $scope.addImdateProjectsOvr = (env) ->
+          addTab 
+            title: 'IMDatE Projects OVR - {{tab.data.environment}}'
+            templateUrl: 'partials/imdateProjectsOvr.html'
+            data:
+              environment: env
+              
+        $scope.addImdateOvr = (env) ->
+          addTab 
+            title: 'IMDatE OVR - {{tab.data.environment}}'
+            templateUrl: 'partials/imdateOvr.html'
+            data:
+              environment: env
+        
+        $scope.closeTab = (tab) ->
+          $scope.tabs.splice $scope.tabs.indexOf(tab), 1
           
-          visibleTab = null
+        $scope.showTab = (tab) ->
+          visibleTab.visible = false if visibleTab?
+          tab.visible = true
+          visibleTab = tab
           
-          addTab = (tab) ->
-            tab.id = tabId++
-            $scope.tabs.push tab
-            $scope.showTab(tab)
-            
-          $scope.addImdateProjects = (env) ->
-            addTab 
-              title: 'IMDatE Projects - {{tab.data.environment}}'
-              templateUrl: 'partials/imdateProjects.html'
-              data:
-                environment: env
-          
-          $scope.addImdateOvr = (env) ->
-            addTab 
-              title: 'IMDatE OVR - {{tab.data.environment}}'
-              templateUrl: 'partials/imdateOvr.html'
-              data:
-                environment: env
-          
-          $scope.closeTab = (tab) ->
-            $scope.tabs.splice $scope.tabs.indexOf(tab), 1
-            
-          $scope.showTab = (tab) ->
-            visibleTab.visible = false if visibleTab?
-            tab.visible = true
-            visibleTab = tab
-            
       .controller 'ImdateOvrCtrl', ($scope, $resource, $http, myNotify) ->
         
         Ovr = null
@@ -163,12 +169,40 @@ require ["config"], ->
                 )
                 
                 
-              
-                
-            
-            
-              
+      .controller 'ImdateProjectsOvrCtrl', ($scope, $resource, myNotify) ->
+        Projects = null
+        ProjectsOvr = null
         
+        $scope.refreshProjects = ->
+          $scope.projects = Projects.query()
+          
+        $scope.refreshProjectsOvr = ->
+          $scope.projectsOvr = if $scope.project? then ProjectsOvr.get() else {}
+          
+        $scope.$watch ((scope)->scope.tab.data.environment), 
+          ((env) -> 
+            Projects = $resource('/api/env/:env/projects', {env: env})
+            $scope.refreshProjects()
+            $scope.project = null
+          )
+          
+        $scope.$watch ((scope)->scope.project), 
+          ((project) -> 
+            ProjectsOvr = $resource('/api/env/:env/projects/:projectName/projectsOvr', {env: $scope.tab.data.environment, projectName: project?.name})
+            $scope.refreshProjectsOvr()
+          )
+          
+        $scope.deleteProjectsOvr = ->
+          ProjectsOvr.delete {}, 
+            ((success)->
+              myNotify.success 'Project specific OVR records for ' + $scope.project.name + ' deleted.'  
+              $scope.refreshProjectsOvr()
+            ),
+            ((error)->
+              myNotify.danger error?.data?.message or error?.message or error
+            )
+              
+          
         
         
             

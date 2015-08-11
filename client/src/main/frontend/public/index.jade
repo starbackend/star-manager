@@ -33,6 +33,11 @@ html
             ul.dropdown-menu
               li(ng-repeat="env in environments") 
                 a(ng-click="addImdateOvr(env)") {{env}}
+          li.dropdown-submenu 
+            a(href="#") IMDatE Projects OVR
+            ul.dropdown-menu
+              li(ng-repeat="env in environments") 
+                a(ng-click="addImdateProjectsOvr(env)") {{env}}
           li.divider
           li: a(href="#") Settings 
     .grow(
