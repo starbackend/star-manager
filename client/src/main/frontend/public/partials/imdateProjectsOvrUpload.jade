@@ -1,0 +1,45 @@
+.flexbox.grow.column.margin02(
+  ng-controller='ImdateProjectsOvrUploadCtrl'
+  style='border:1px #AAA solid;'
+)
+  .flexbox.column.flex
+    .flex.rows.ace_grow(
+      cg-busy="sourcePromise"
+    )
+      div(
+        ui-ace="sourceOptions"
+        ng-model="source"
+      )
+    div(splitter='down')
+    div(
+      style='height:300px; overflow-y: auto'
+      cg-busy="errors.$promise"
+    ).rows.ace_grow
+      table(
+        st-safe-src="errors"
+        st-table="displayedErrors"
+      ).table.table-striped.table-hover
+        thead
+          tr
+            th(colspan="4")
+              .cols
+                input(
+                  st-search=""
+                  type="text"
+                  placeholder="search..."
+                ).form-control.grow
+          tr
+            th(st-sort="lineNumber") Line Number
+            th(st-sort="field") Field
+            th(st-sort="message") Message
+            th(st-sort="type") Type
+            th
+        tbody
+          tr(
+            ng-repeat="row in displayedErrors"
+            ng-click="showLine(row)"
+          )
+            td {{ row.lineNumber }}
+            td {{ row.field }}
+            td {{ row.message }}
+            td {{ row.type }}

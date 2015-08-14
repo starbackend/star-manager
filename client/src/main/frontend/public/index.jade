@@ -40,13 +40,12 @@ html
                 a(ng-click="addImdateProjectsOvr(env)") {{env}}
           li.divider
           li: a(href="#") Settings 
-    .grow(
+    .grow.rows(
       ng-repeat="tab in tabs track by tab.id"
       ng-show="tab.visible"
     ) 
-      div(
+      div.grow.rows(
         ng-include="tab.templateUrl"
-        onload="data = tab.data"
       )
       
         

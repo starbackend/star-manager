@@ -69,7 +69,7 @@ div(
         span.glyphicon.glyphicon-download
       button.btn.btn-danger(ng-click="sendXml()")
         span.glyphicon.glyphicon-upload
-      div(
+      .ace_fixed(
         ui-ace="{mode:'xml'}"
         ng-model="xml.data"
       ) 

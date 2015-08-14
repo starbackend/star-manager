@@ -2,6 +2,7 @@
 @import (css) "libs/bootstrap/dist/css/bootstrap.css";
 @import (css) "libs/bootstrap-submenu/dist/css/bootstrap-submenu.css";
 @import (css) "libs/angular-busy/dist/angular-busy.css";
+@import (css) "ext/angular-flex-splitter.css";
 //@import (css) "libs/smartmenus/dist/css/sm-core-css.css"
 //@import (css) "libs/smartmenus/dist/css/sm-blue/sm-blue.css"
 
@@ -55,4 +56,8 @@ html, body {
 	font-style: italic;
 }	
 
-.ace_editor { height: 20em; }
+.ace_fixed.ace_editor, .ace_fixed .ace_editor { height: 20em; }
+
+.ace_grow .ace_editor, .ace_grow.ace_editor {
+  &:extend(.grow);
+}

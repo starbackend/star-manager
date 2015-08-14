@@ -13,6 +13,9 @@ require ["config"], ->
     "angular-notify"
     "ngcompile"
     "angular-ui-ace"
+    "angular-bootstrap-file-field"
+    "ng-file-upload"
+    "angular-flex-splitter"
   ], ->
     
     angular.module 'star.manager', [
@@ -24,12 +27,24 @@ require ["config"], ->
       'cgNotify'
       'compile'
       'ui.ace'
+      'bootstrap.fileField'
+      'ngFileUpload'
+      'splitter'
     ]
       .directive 'emptyToNull', ()->
         restrict: 'A'
         require: 'ngModel'
         link: (scope, elem, attrs, ctrl)->
           ctrl.$parsers.push (viewValue) -> if viewValue == "" then null else viewValue
+      .directive 'clickAndDisable', ()->
+        return {}=
+          scope:
+            clickAndDisable: '&'
+          link: (scope, iElement, iAttrs) ->
+            iElement.bind 'click', ->
+              iElement.prop 'disabled', true
+              scope.clickAndDisable().finally ->
+                iElement.prop 'disabled', false
       .factory 'myNotify', (notify) ->
         notify.config
           duration: 3000
@@ -40,10 +55,20 @@ require ["config"], ->
               message: msg
               classes: 'alert-danger'
               duration: 3000
+          warning: (msg) ->
+            notify
+              message: msg
+              classes: 'alert-warning'
+              duration: 3000
           success: (msg) ->
             notify
               message: msg
               classes: 'alert-success'
+              duration: 3000
+          error: (error) ->
+            notify 
+              message: error?.data?.message or error?.message or error
+              classes: 'alert-danger'
               duration: 3000
         
       .controller "MainCtrl", ($scope, $resource) ->
@@ -54,7 +79,7 @@ require ["config"], ->
         
         visibleTab = null
         
-        addTab = (tab) ->
+        $scope.addTab = addTab = (tab) ->
           tab.id = tabId++
           $scope.tabs.push tab
           $scope.showTab(tab)
@@ -169,7 +194,7 @@ require ["config"], ->
                 )
                 
                 
-      .controller 'ImdateProjectsOvrCtrl', ($scope, $resource, myNotify) ->
+      .controller 'ImdateProjectsOvrCtrl', ($scope, $resource, myNotify, Upload) ->
         Projects = null
         ProjectsOvr = null
         
@@ -178,6 +203,11 @@ require ["config"], ->
           
         $scope.refreshProjectsOvr = ->
           $scope.projectsOvr = if $scope.project? then ProjectsOvr.get() else {}
+          
+        $scope.refreshUploads = ->
+          $scope.uploads = $resource('/api/projectsOvr/uploads').query()
+          
+        $scope.refreshUploads()
           
         $scope.$watch ((scope)->scope.tab.data.environment), 
           ((env) -> 
@@ -190,6 +220,13 @@ require ["config"], ->
           ((project) -> 
             ProjectsOvr = $resource('/api/env/:env/projects/:projectName/projectsOvr', {env: $scope.tab.data.environment, projectName: project?.name})
             $scope.refreshProjectsOvr()
+            
+            $scope.format = null
+           
+            if $scope.project  
+              for format in $scope.formats
+                if $scope.project.name in format.projects
+                  $scope.format = format
           )
           
         $scope.deleteProjectsOvr = ->
@@ -201,6 +238,87 @@ require ["config"], ->
             ((error)->
               myNotify.danger error?.data?.message or error?.message or error
             )
+            
+        $scope.formats = $resource('/api/projectsOvr/formats').query()
+        
+        $scope.doUpload = ->
+          $scope.upload = Upload.upload
+            url: '/api/projectsOvr/uploads'
+            method: 'POST'
+            fields:
+              format: $scope.format.name
+              parameters: '{}' # TODO
+            file: $scope.uploadFile
+            fileFormDataName: 'data'
+          
+          $scope.upload.then (response) ->
+            data = response.data
+            if data.errorCount == 0
+              myNotify.success data.fileName + ' uploaded with no errors.'
+            else
+              myNotify.success data.fileName + ' uploaded with some errors.'
+              
+            $scope.refreshUploads()
+          
+        $scope.sendCdf = (upload) ->
+          send = $resource('/api/projectsOvr/uploads/:uploadId', {uploadId: upload.id}).save {environment: $scope.tab.data.environment}, '',
+            (->
+              myNotify.success 'Upload number ' + upload.id + ' sent successfully.'
+              $scope.refreshProjectsOvr()
+            ), 
+            ((error)->
+              myNotify.danger error?.data?.message or error?.message or error
+            )
+            
+          return send.$promise
+          
+        $scope.deleteUpload = (upload) ->
+          $resource('/api/projectsOvr/uploads/:uploadId', {uploadId: upload.id}).delete {},
+            (->
+              myNotify.success 'Upload number ' + upload.id + ' deleted successfully.'
+              $scope.refreshUploads()
+            ), 
+            ((error)->
+              myNotify.danger error?.data?.message or error?.message or error
+            )
+            
+        $scope.viewUpload = (upload) ->
+          $scope.addTab
+            title: 'IMDatE Project Ovr Upload #{{tab.data.id}}'
+            templateUrl: 'partials/imdateProjectsOvrUpload.html'
+            data: upload
+            
+            
+          
+          
+        return
+            
+      .controller 'ImdateProjectsOvrUploadCtrl', ($scope, $http, myNotify, $resource) ->
+        
+        $scope.sourceOptions = 
+          mode: if $scope.tab.data.fileFormat == 'csv' then 'text' else $scope.tab.data.fileFormat
+          onLoad: (ace) ->
+            ace.setReadOnly true
+            ace.$blockScrolling = Infinity
+            $scope.showLine = (error) ->
+              ace.gotoLine error.lineNumber
+              
+        
+        $scope.sourcePromise = $http.get '/api/projectsOvr/uploads/source', {params:{uploadId: $scope.tab.data.id}}
+          .then ((response)->
+              $scope.source = response.data
+            ),
+            myNotify.error
+            
+        $scope.errors = $resource('/api/projectsOvr/uploads/:uploadId/errors', {uploadId: $scope.tab.data.id}).query()  
+          
+              
+          
+        
+            
+          
+        
+              
               
           
         

@@ -13,7 +13,7 @@ div(
       
   .panel.panel-default
     .panel-heading
-      .panel-title Project
+      .panel-title Projects
     .panel-body(
       cg-busy="projects.$promise"
     )
@@ -38,7 +38,101 @@ div(
           ng-click="deleteProjectsOvr()"
         )
           span.glyphicon.glyphicon-trash
+      
+  .panel.panel-default
+    .panel-heading
+      .panel-title Upload
+    .panel-body(
+      cg-busy="upload"
+    )
+      form(
+        ng-submit="doUpload()"
+      )
+        
+        .form-group(
+            cg-busy="formats.$promise"
+        )
+          label Format
+          select.form-control(
+            ng-model="format"
+            ng-options="format.name for format in formats"
+          )
+        .form-group
+          label File
+          .input-group
+            span.input-group-btn
+              file-field.btn(
+                ng-model="uploadFile"
+              ) Select File
+            input.form-control(
+              disabled
+              placeholder="{{ uploadFile.name }}"
+            )
+            
+        button.btn.btn-success(
+          type="submit"
+          ng-disabled="!format || !uploadFile"
+        )
+          span.glyphicon.glyphicon-upload
+        
           
+  .panel.panel-default
+    .panel-heading
+      .panel-title Uploads
+    .panel-body(
+      cg-busy="uploads.$promise"
+    )
+      
+      table(
+        st-table="displayedUploads"
+        st-safe-src="uploads"
+        cg-busy="send.$promise"
+      ).table.table-striped.table-hover
+        thead
+          tr
+            th(colspan="7")
+              .cols
+                button.btn(ng-click="refreshUploads()")
+                  span.glyphicon.glyphicon-refresh
+                input(
+                  st-search=""
+                  type="text"
+                  placeholder="search..."
+                ).form-control.grow
+          tr
+            th(st-sort="id") ID
+            th(st-sort="format") Format
+            th(st-sort="fileName") File Name
+            th(st-sort="fileSize") File Size
+            th(st-sort="errorCount") Error Count
+            th(st-sort="creationTime", st-sort-default="reverse") Creation Time
+            th
+        tbody
+          tr(
+            ng-repeat="row in displayedUploads"
+          )
+            td {{ row.id }}
+            td {{ row.format }}
+            td {{ row.fileName }}
+            td {{ row.fileSize }}
+            td {{ row.errorCount }}
+            td {{ row.creationTime | date:'medium' }}
+            td
+              button.btn(
+                ng-click="deleteUpload(row)"
+              )
+                  span.glyphicon.glyphicon-trash
+              button.btn(
+                ng-click="viewUpload(row)"
+              )
+                  span.glyphicon.glyphicon-eye-open
+              button.btn(
+                ng-show="row.errorCount == 0"
+                click-and-disable="sendCdf(row)"
+              )
+                  span.glyphicon.glyphicon-envelope
+              
+        
         
         
       

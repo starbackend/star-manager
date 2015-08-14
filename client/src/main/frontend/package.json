@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "requirejs": "bower-requirejs -c public/js/config.js  -e requirejs"
+    "requirejs": "bower-requirejs -c public/js/config.js -t --base-url='../../../target/generated/js'"
   },
   "author": "",
   "license": "ISC",

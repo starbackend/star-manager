@@ -77,22 +77,31 @@ require.config({
       deps: [
         "angular"
       ]
+    },
+    "angular-bootstrap-file-field": {
+      deps: [
+        "angular"
+      ]
+    },
+    "ng-file-upload": {
+      deps: [
+        "angular"
+      ]
+    },
+    "angular-flex-splitter": {
+      deps: [
+        "angular"
+      ]
     }
   },
   paths: {
-    angular: "../libs/angular/angular",
-    wcDocker: "../libs/wcDocker/Build/wcDocker",
-    "font-awesome": "../libs/font-awesome/fonts/*",
-    "jquery.contextMenu": "../libs/jQuery-contextMenu/src/jquery.contextMenu",
-    "jquery.ui.position": "../libs/jQuery-contextMenu/src/jquery.ui.position",
-    jquery: "../libs/jquery/dist/jquery",
+    jquery: "../libs/jquery/jquery",
     "schema-form": "../libs/angular-schema-form/dist/schema-form",
     "bootstrap-decorator": "../libs/angular-schema-form/dist/bootstrap-decorator",
     requirejs: "../libs/requirejs/require",
     "angular-sanitize": "../libs/angular-sanitize/angular-sanitize",
     objectpath: "../libs/objectpath/lib/ObjectPath",
     tv4: "../libs/tv4/tv4",
-    "angular-bootstrap-scrolling-tabs": "../libs/angular-bootstrap-scrolling-tabs/scrolling-tabs",
     bootstrap: "../libs/bootstrap/dist/js/bootstrap",
     "angular-smart-table": "../libs/angular-smart-table/dist/smart-table",
     "angular-bootstrap": "../libs/angular-bootstrap/ui-bootstrap-tpls",
@@ -103,7 +112,12 @@ require.config({
     "angular-notify": "../libs/angular-notify/dist/angular-notify",
     ngcompile: "../libs/ngcompile/directives/ngcompile",
     ace: "../libs/ace-builds/src-min-noconflict/ace",
-    "angular-ui-ace": "../libs/angular-ui-ace/ui-ace"
+    "angular-ui-ace": "../libs/angular-ui-ace/ui-ace",
+    "angular-bootstrap-file-field": "../libs/angular-bootstrap-file-field/dist/angular-bootstrap-file-field.min",
+    angular: "../libs/angular/angular",
+    "ng-file-upload": "../libs/ng-file-upload/ng-file-upload",
+    "bg-splitter": "../libs/bg-splitter/js/splitter",
+    "angular-flex-splitter": "../ext/angular-flex-splitter"
   },
   packages: [
 
