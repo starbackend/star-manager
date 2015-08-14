@@ -95,7 +95,7 @@ require.config({
     }
   },
   paths: {
-    jquery: "../libs/jquery/jquery",
+    jquery: "../libs/jquery/dist/jquery",
     "schema-form": "../libs/angular-schema-form/dist/schema-form",
     "bootstrap-decorator": "../libs/angular-schema-form/dist/bootstrap-decorator",
     requirejs: "../libs/requirejs/require",
@@ -121,5 +121,10 @@ require.config({
   },
   packages: [
 
-  ]
+  ],
+  map: {
+    "*": {
+      "schemaForm": "schema-form"
+    }
+  }
 });
