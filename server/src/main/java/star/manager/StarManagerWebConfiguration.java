@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 @Import({
         StarManagerController.class,
         ProjectsController.class,
+        ProjectsOvrController.class,
         OvrController.class,
         XmlController.class,
         StarManagerConfigService.class,

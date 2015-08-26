@@ -1,5 +1,7 @@
 package star.manager;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
@@ -10,6 +12,11 @@ import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+import java.awt.*;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+
 @Configuration
 @EnableAutoConfiguration(exclude={
         DataSourceAutoConfiguration.class,
@@ -19,13 +26,31 @@ import org.springframework.context.annotation.Import;
 @Import({ 
 	StarManagerWebConfiguration.class
 })
-public class StarManagerApplication extends SpringBootServletInitializer {
+public class StarManagerApplication extends SpringBootServletInitializer implements CommandLineRunner {
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(StarManagerApplication.class);
     }
 
     public static void main(String[] args) throws Exception {
-        SpringApplication.run(StarManagerApplication.class, args);
+        SpringApplication app = new SpringApplication(StarManagerApplication.class);
+        app.setHeadless(false);
+        app.run(args);
+    }
+
+    @Value("http://localhost:${server.port}")
+    String url;
+
+    @Override
+    public void run(String... args) throws Exception {
+        if(Desktop.isDesktopSupported()){
+            Desktop desktop = Desktop.getDesktop();
+            try {
+                desktop.browse(new URI(url));
+            } catch (IOException | URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 }

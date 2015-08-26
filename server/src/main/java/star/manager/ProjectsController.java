@@ -1,11 +1,11 @@
 package star.manager;
 
-import hu.mapro.mfw.model.Field;
-import hu.mapro.mfw.model.Model;
 import hu.mapro.mfw.spring.JsonArg;
 import org.cwatch.imdate.domain.Projects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import star.connect.imdate.format.ImdateRestClient;
+import star.connect.imdate.format.ProjectsOvrSummary;
 
 import java.util.List;
 
@@ -38,4 +38,21 @@ public class ProjectsController {
     }
 
 
+    @RequestMapping(value="/{projectName}/projectsOvr", method = RequestMethod.GET)
+    public ProjectsOvrSummary getProjectsOvr(
+            @PathVariable("env") String env,
+            @PathVariable("projectName") String projectName
+    ) {
+        return configService.getEnvironment(env).getBeans().projectsOvrService.getProjectsOvrSummary(projectName);
+    }
+
+    @RequestMapping(value="/{projectName}/projectsOvr", method = RequestMethod.DELETE)
+    public ImdateRestClient.ImdateRestResponse deleteProjectsOvr(
+            @PathVariable("env") String env,
+            @PathVariable("projectName") String projectName
+    ) {
+        return configService.getEnvironment(env).getBeans().projectsOvrService.deleteProjectsOvr(projectName);
+    }
+
 }
+

@@ -20,6 +20,7 @@
                 <version>0.0.24</version>
                 <configuration>
                     <workingDirectory>src/main/frontend</workingDirectory>
+                    <installDirectory>c:\oracle\temp</installDirectory>
                 </configuration>
                 <executions>
                     <execution>

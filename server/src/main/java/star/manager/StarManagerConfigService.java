@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Component;
-import star.connect.imdate.DefaultConfigService;
-import star.connect.imdate.ImdateConfigurationBase;
+import star.connect.imdate.format.DefaultConfigService;
+import star.connect.imdate.format.ImdateConfigurationBase;
 
 /**
  * Created by pappmar on 03/08/2015.
