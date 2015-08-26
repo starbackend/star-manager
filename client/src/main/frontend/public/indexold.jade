@@ -8,16 +8,14 @@ html
     )
   body.rows(ng-controller="MainCtrl")
     .cols.margin02
-      select.grow.form-control(
-        ng-options="tab.title() for tab in tabs"
-        ng-model="selectedTab"
-        ng-change="setTabHead(selectedTab)"
-      )
-      button.btn.btn-warning(
-        ng-disabled="!selectedTab"
-        ng-click="closeTab(selectedTab)"
-      )
-        span.glyphicon.glyphicon-remove
+      .cols.grow.scroll
+        button.btn(
+          ng-repeat="tab in tabs track by tab.id"
+          ng-click="showTab(tab)"
+          ng-class="{'bg-primary': tab.visible}"
+        ) 
+          compile(compile="tab.title")
+          span(ng-click="closeTab(tab); $event.stopPropagation()").glyphicon.glyphicon-remove
       .btn-group
         button.btn.btn-info.dropdown-toggle(
           data-toggle="dropdown"
@@ -43,8 +41,8 @@ html
           li.divider
           li: a(href="#") Settings 
     .grow.rows(
-      ng-repeat="tab in tabs"
-      ng-show="selectedTab == tab"
+      ng-repeat="tab in tabs track by tab.id"
+      ng-show="tab.visible"
     ) 
       div.grow.rows(
         ng-include="tab.templateUrl"

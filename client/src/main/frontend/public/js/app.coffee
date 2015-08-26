@@ -77,41 +77,64 @@ require ["config"], ->
         
         tabId = 0
         
-        visibleTab = null
+        tabHead = null
         
+        $scope.selectedTab = null
+        
+        $scope.setTabHead = (tab) ->
+          if tab?
+            unlinkTab tab
+            tab.$prev = tabHead
+            tab.$next = null
+            if tabHead?
+              tabHead.$next = tab
+            tabHead = tab
+            
         $scope.addTab = addTab = (tab) ->
           tab.id = tabId++
           $scope.tabs.push tab
-          $scope.showTab(tab)
+          $scope.setTabHead tab
+          $scope.selectedTab = tab
           
         $scope.addImdateProjects = (env) ->
-          addTab 
-            title: 'IMDatE Projects - {{tab.data.environment}}'
+          tab = 
+            title: -> "IMDatE Projects - #{ tab.data.environment }"
             templateUrl: 'partials/imdateProjects.html'
             data:
               environment: env
+              
+          addTab tab
         
         $scope.addImdateProjectsOvr = (env) ->
-          addTab 
-            title: 'IMDatE Projects OVR - {{tab.data.environment}}'
+          tab =  
+            title: -> "IMDatE Projects OVR - #{ tab.data.environment }"
             templateUrl: 'partials/imdateProjectsOvr.html'
             data:
               environment: env
+          addTab tab
               
         $scope.addImdateOvr = (env) ->
-          addTab 
-            title: 'IMDatE OVR - {{tab.data.environment}}'
+          tab = 
+            title: -> "IMDatE OVR - #{ tab.data.environment }"
             templateUrl: 'partials/imdateOvr.html'
             data:
               environment: env
+          addTab tab
         
+        unlinkTab = (tab) ->
+          if tab.$next? then tab.$next.$prev = tab.$prev
+          if tab.$prev? then tab.$prev.$next = tab.$next
+            
         $scope.closeTab = (tab) ->
+          unlinkTab tab
           $scope.tabs.splice $scope.tabs.indexOf(tab), 1
+          if tab == tabHead
+            tabHead = tabHead.$prev
+            $scope.selectedTab = tabHead
           
-        $scope.showTab = (tab) ->
-          visibleTab.visible = false if visibleTab?
-          tab.visible = true
-          visibleTab = tab
+            
+            
+          
           
       .controller 'ImdateOvrCtrl', ($scope, $resource, $http, myNotify) ->
         
@@ -283,10 +306,12 @@ require ["config"], ->
             )
             
         $scope.viewUpload = (upload) ->
-          $scope.addTab
-            title: 'IMDatE Project Ovr Upload #{{tab.data.id}}'
+          tab =
+            title: -> "IMDatE Project Ovr Upload no. #{ tab.data.id }"
             templateUrl: 'partials/imdateProjectsOvrUpload.html'
             data: upload
+            
+          $scope.addTab tab
             
             
           
